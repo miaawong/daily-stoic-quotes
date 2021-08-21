@@ -54,26 +54,25 @@ test("renders UI", () => {
   expect(button).toBeInTheDocument();
 });
 
-// on mount, fetch quote
-
-// onclick fetches new quote
-
-// test("Example", async () => {
-//   const url = "https://stoicquotesapi.com/v1/api/quotes/random";
-//   const mockGet = jest.spyOn(axios, "get").mockResolvedValue({ body: "hello" });
-//   const wrapper = render(<Home />);
-//   await waitFor(() => expect.wrapper.queryAllByText("hello").toHaveLength(1));
-// });
-
-describe("good response", () => {
-  it("loads the quote on mount", async () => {
-    await act(() => {
-      const { getAllByTestId, getByTestId, getByText, getByRole } = render(
-        <Home />
-      );
-
-      expect(screen.getByText("Marcus Aurelius")).toBeInTheDocument();
-    });
+function mockCall() {
+  axios.get.mockResolvedValueOnce({
+    data: {
+      body: "hello",
+    },
   });
+}
+
+test("fetch and load quote on mount", async () => {
+  mockCall();
+
+  const { getByTestId } = render(<Home />);
+
+  //check what's rendered in the row
+  const rowValues = await waitFor(() => getByTestId("quote"));
+  expect(rowValues).toHaveTextContent("hello");
+  expect(axios.get).toHaveBeenCalledTimes(1);
+  expect(axios.get).toHaveBeenCalledWith(
+    "https://stoicquotesapi.com/v1/api/quotes/random"
+  );
 });
 // animation

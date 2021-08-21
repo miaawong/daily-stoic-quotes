@@ -7,10 +7,11 @@ const Home = () => {
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const res = await axios
-          .get("https://stoicquotesapi.com/v1/api/quotes/random")
-          .then(res => console.log(res.data));
-        setQuote(res);
+        const res = await axios.get(
+          "https://stoicquotesapi.com/v1/api/quotes/random"
+        );
+
+        setQuote(res.data);
       } catch (err) {
         console.log(err);
       }
